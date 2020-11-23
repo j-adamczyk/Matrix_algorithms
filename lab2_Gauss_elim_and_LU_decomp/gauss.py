@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.linalg import lu_factor
+from scipy.linalg import lu
 
 from lab2_Gauss_elim_and_LU_decomp.pivoting import pivoting
 
@@ -19,7 +19,7 @@ def gauss_elimination_classic(A: np.ndarray) \
         A = pivoting(A, k, "row")
         Akk = A[k, k]
         for j in range(k + 1, n):
-            A[j, k:n] -= A[k, k:n] * A[j, k] / Akk
+            A[j, k:] -= A[k, k:] * A[j, k] / Akk
 
     return A
 
@@ -66,7 +66,4 @@ A = np.array([[1, 1, 1],
               [1, 2, 3]], dtype=np.float32)
 
 A_custom = gauss_elimination_column(A.copy())
-A_builtin = lu_factor(A)[0]
-print(A_custom)
-print()
-print(A_builtin)
+
