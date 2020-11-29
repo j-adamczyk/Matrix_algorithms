@@ -49,11 +49,18 @@ def _coordinate_row(A: CoordinateSparseMatrix) -> CoordinateSparseMatrix:
                 continue
 
             for i in range(k + 1, n):
+                Aki = A.get(k, i)
+                if Aki == 0:
+                    continue
+
                 Aji, ji_index = A.get(j, i, index=True)
-                if Aji != 0:
-                    Aki = A.get(k, i)
-                    if Aki != 0:
-                        A.vals[ji_index] -= Aki * Ajk
+                val = (-1) * (Aki * Ajk)
+                if ji_index >= 0:
+                    # value already exists
+                    A.vals[ji_index] += val
+                else:
+                    # we have to insert new non-zero value
+                    A.insert(j, i, val)
 
     return A
 

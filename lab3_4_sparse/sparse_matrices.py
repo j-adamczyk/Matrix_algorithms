@@ -72,6 +72,37 @@ class CoordinateSparseMatrix(SparseMatrix):
         else:
             return 0
 
+    def insert(self,
+               row: int,
+               col: int,
+               val: float):
+        i = 0
+        while True:
+            while i < self.non_zeros and self.rows[i] < row:
+                i += 1
+
+            if i == self.non_zeros:
+                insert_index = self.non_zeros
+                break
+            elif self.rows[i] > row:
+                insert_index = i
+                break
+
+            while i < self.non_zeros and self.cols[i] < col:
+                i += 1
+
+            if i == self.non_zeros:
+                insert_index = self.non_zeros
+                break
+            elif self.cols[i] > col:
+                insert_index = i
+                break
+
+        self.rows.insert(insert_index, row)
+        self.cols.insert(insert_index, col)
+        self.vals.insert(insert_index, val)
+
+
     def __repr__(self):
         return self.__str__()
 

@@ -13,5 +13,6 @@ if __name__ == '__main__':
     A_coordinate = CoordinateSparseMatrix(A)
     #print(A_coordinate.to_dense())
 
-    print(sparse_gauss_elimination_row(A_coordinate).to_dense())
-    #print(gauss_elimination_row(A, use_pivoting=False))
+    A_gauss = sparse_gauss_elimination_row(A_coordinate)
+
+    print(A_gauss.to_dense())
