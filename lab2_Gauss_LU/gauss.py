@@ -1,7 +1,6 @@
 import numpy as np
-from scipy.linalg import lu
 
-from lab2_Gauss_elim_and_LU_decomp.pivoting import pivoting
+from lab2_Gauss_LU.pivoting import pivoting
 
 
 def gauss_elimination_classic(A: np.ndarray) \
@@ -13,7 +12,7 @@ def gauss_elimination_classic(A: np.ndarray) \
     :param A: square matrix of shape (n, n)
     :return: matrix A after Gaussian elimination
     """
-    A = A.copy()
+    A = A.copy().astype(np.float)
     n = A.shape[0]
     for k in range(n):
         A = pivoting(A, k, "row")
@@ -24,21 +23,25 @@ def gauss_elimination_classic(A: np.ndarray) \
     return A
 
 
-def gauss_elimination_row(A: np.ndarray) \
+def gauss_elimination_row(A: np.ndarray, use_pivoting: bool = True) \
         -> np.ndarray:
     """
-    Performs Gaussian elimination on matrix A row-wise with pivoting.
+    Performs Gaussian elimination on matrix A row-wise, optionally with
+    pivoting.
 
     :param A: square matrix of shape (n, n)
+    :param use_pivoting: whether to use pivoting or not
     :return: matrix A after Gaussian elimination
     """
-    A = A.copy()
+    A = A.copy().astype(np.float)
     n = A.shape[0]
-    for k in range(n):
-        A = pivoting(A, k, "row")
-        A[k, k:] = A[k, k:] / A[k, k]
+    for k in range(n - 1):
+        if use_pivoting:
+            A = pivoting(A, k, "row")
+        Akk = A[k, k]
+        A[k, k:] = A[k, k:] / Akk
         for j in range(k + 1, n):
-            A[j, k:] -= A[k, k:] * A[j, k]
+            A[j, k + 1:] -= A[k, k + 1:] * A[j, k]
     return A
 
 
@@ -50,7 +53,7 @@ def gauss_elimination_column(A: np.ndarray) \
     :param A: square matrix of shape (n, n)
     :return: matrix A after Gaussian elimination
     """
-    A = A.copy()
+    A = A.copy().astype(np.float)
     n = A.shape[0]
     for k in range(n):
         A = pivoting(A, k, "col")
@@ -59,11 +62,3 @@ def gauss_elimination_column(A: np.ndarray) \
             A[k + 1:n, j] -= A[k + 1:n, k] * A[k, j]
 
     return A
-
-
-A = np.array([[1, 1, 1],
-              [2, 3, 7],
-              [1, 2, 3]], dtype=np.float32)
-
-A_custom = gauss_elimination_column(A.copy())
-

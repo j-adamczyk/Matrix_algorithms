@@ -1,6 +1,6 @@
 import numpy as np
 
-from lab2_Gauss_elim_and_LU_decomp.pivoting import pivoting
+from lab2_Gauss_LU.pivoting import pivoting
 
 
 def LU_decomposition(A: np.ndarray) \

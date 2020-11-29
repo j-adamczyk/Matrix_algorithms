@@ -4,6 +4,16 @@ import numpy as np
 
 class SparseMatrix(ABC):
     @abstractmethod
+    def __init__(self):
+        self.dtype = None
+        self.shape = None
+
+        self.rows = []
+        self.cols = []
+        self.vals = []
+        self.non_zeros = None
+
+    @abstractmethod
     def to_dense(self):
         raise NotImplementedError()
 
@@ -14,6 +24,7 @@ class CoordinateSparseMatrix(SparseMatrix):
         Constructs sparse matrix in the coordinate format from a dense matrix.
         :param matrix: 2D Numpy array
         """
+        super().__init__()
         if matrix is not None:
             self.dtype = matrix.dtype
             self._from_dense(matrix)
@@ -45,6 +56,22 @@ class CoordinateSparseMatrix(SparseMatrix):
 
         return dense
 
+    def get(self,
+            row: int,
+            col: int,
+            index: bool = False):
+        for i in range(len(self.vals)):
+            if self.rows[i] == row and self.cols[i] == col:
+                if index:
+                    return self.vals[i], i
+                else:
+                    return self.vals[i]
+
+        if index:
+            return 0, -1
+        else:
+            return 0
+
     def __repr__(self):
         return self.__str__()
 
@@ -63,6 +90,7 @@ class CSRMatrix(SparseMatrix):
         from a dense matrix.
         :param matrix: 2D Numpy array
         """
+        super().__init__()
         if matrix is not None:
             self.dtype = matrix.dtype
             self._from_dense(matrix)
@@ -113,6 +141,7 @@ class CSCMatrix(SparseMatrix):
         from a dense matrix.
         :param matrix: 2D Numpy array
         """
+        super().__init__()
         if matrix is not None:
             self.dtype = matrix.dtype
             self._from_dense(matrix)
@@ -181,23 +210,3 @@ def coordinate_to_CSC(coord_matrix: CoordinateSparseMatrix):
     csc_matrix.cols.append(csc_matrix.non_zeros)
 
     return csc_matrix
-
-
-A = np.array([[0, 1, 0],
-              [2, 0, 3],
-              [0, 4, 0]])
-
-A_coordinate = CoordinateSparseMatrix(A)
-A_CSC = CSCMatrix(A)
-
-print("A in coordinate format:")
-print(A_coordinate)
-
-print("\nCoordinate back to dense:")
-print(A_coordinate.to_dense())
-
-print("\nA in CSC format:")
-print(A_CSC)
-
-print("\nCSC back to dense:")
-print(A_CSC.to_dense())
