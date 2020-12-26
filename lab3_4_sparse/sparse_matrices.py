@@ -102,7 +102,6 @@ class CoordinateSparseMatrix(SparseMatrix):
         self.cols.insert(insert_index, col)
         self.vals.insert(insert_index, val)
 
-
     def __repr__(self):
         return self.__str__()
 

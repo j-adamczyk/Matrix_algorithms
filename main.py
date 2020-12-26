@@ -1,7 +1,9 @@
 import numpy as np
+from scipy.linalg import lu_factor
 
 from lab3_4_sparse.sparse_matrices import CoordinateSparseMatrix
 from lab3_4_sparse.sparse_gauss import sparse_gauss_elimination_row
+
 
 if __name__ == '__main__':
     A = np.array([[1, 3, 0, 0, 0],
@@ -11,8 +13,5 @@ if __name__ == '__main__':
                   [0, 0, 0, 0, 8]])
 
     A_coordinate = CoordinateSparseMatrix(A)
-    #print(A_coordinate.to_dense())
-
     A_gauss = sparse_gauss_elimination_row(A_coordinate)
-
     print(A_gauss.to_dense())

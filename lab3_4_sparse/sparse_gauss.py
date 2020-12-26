@@ -63,4 +63,3 @@ def _coordinate_row(A: CoordinateSparseMatrix) -> CoordinateSparseMatrix:
                     A.insert(j, i, val)
 
     return A
-
