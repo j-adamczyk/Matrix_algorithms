@@ -1,4 +1,5 @@
 import numpy as np
+from time import process_time
 
 
 def dot(vec1: np.ndarray, vec2: np.ndarray) \
@@ -16,38 +17,67 @@ def dot(vec1: np.ndarray, vec2: np.ndarray) \
     return dot_product
 
 
-def matmul_1a(A: np.ndarray, B: np.ndarray) -> np.ndarray:
+def matmul_3_loops(A: np.ndarray,
+                   B: np.ndarray,
+                   order="ijk") \
+        -> np.ndarray:
     """
-    IJP matrix multiplication, using dot product between rows of A and
+    IJK matrix multiplication, using dot product between rows of A and
     columns of B.
     :param A: matrix of shape (m, k)
     :param B: matrix of shape (k, n)
+    :param order: order of multiplication loops
     :return: matrix of shape (m, n)
     """
     m = A.shape[0]
-    k = A.shape[1]  # B.shape[0]
+    l = A.shape[1]  # B.shape[0]
     n = B.shape[1]
 
     C = np.zeros((m, n))
 
-    for i in range(m):
+    if order == "ijk":
+        for i in range(m):
+            for j in range(n):
+                for k in range(l):
+                    C[i, j] += A[i, k] * B[k, j]
+    elif order == "ikj":
+        for i in range(m):
+            for k in range(l):
+                for j in range(n):
+                    C[i, j] += A[i, k] * B[k, j]
+    elif order == "jik":
         for j in range(n):
-            # slice 0:k is mathematical range [0, k-1]
-            C[i, j] += dot(A[i, 0:k], B[0:k, j].flatten())
+            for i in range(m):
+                for k in range(l):
+                    C[i, j] += A[i, k] * B[k, j]
+    elif order == "jki":
+        for j in range(n):
+            for k in range(l):
+                for i in range(m):
+                    C[i, j] += A[i, k] * B[k, j]
+    elif order == "kij":
+        for k in range(l):
+            for i in range(m):
+                for j in range(n):
+                    C[i, j] += A[i, k] * B[k, j]
+    elif order == "kji":
+        for k in range(l):
+            for j in range(n):
+                for i in range(m):
+                    C[i, j] += B[i, k] * B[k, j]
 
     return C
 
 
-A = np.array([[1, 2],
-              [3, 4]])
+if __name__ == "__main__":
+    for size in [10, 100, 1000]:
+        print(size)
+        for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
+            A = np.random.rand(size, size)
+            B = np.random.rand(size, size)
 
-B = np.array([[5, 6],
-              [7, 8]])
+            start = process_time()
+            C = matmul_3_loops(A, B, order)
+            end = process_time()
 
-C = matmul_1a(A, B)
-
-target = np.array([[19, 22],
-                   [43, 50]])
-
-assert (C == target).all()
-
+            print("\t", order, (end - start) * 1000, "ms")
