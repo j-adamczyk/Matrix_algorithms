@@ -44,8 +44,7 @@ def matmul_3_loops(A: np.ndarray,
     elif order == "ikj":
         for i in range(m):
             for k in range(l):
-                for j in range(n):
-                    C[i, j] += A[i, k] * B[k, j]
+                C[i, :n] += A[i, k] * B[k, :n]
     elif order == "jik":
         for j in range(n):
             for i in range(m):
@@ -54,18 +53,15 @@ def matmul_3_loops(A: np.ndarray,
     elif order == "jki":
         for j in range(n):
             for k in range(l):
-                for i in range(m):
-                    C[i, j] += A[i, k] * B[k, j]
+                C[:m, j] += A[:m, k] * B[k, j]
     elif order == "kij":
         for k in range(l):
             for i in range(m):
-                for j in range(n):
-                    C[i, j] += A[i, k] * B[k, j]
+                C[i, :n] += A[i, k] * B[k, :n]
     elif order == "kji":
         for k in range(l):
             for j in range(n):
-                for i in range(m):
-                    C[i, j] += B[i, k] * B[k, j]
+                C[:m, j] += B[:m, k] * B[k, j]
 
     return C
 
@@ -87,28 +83,3 @@ if __name__ == "__main__":
                 times[order].append(ms)
         for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
             print("\t", order, mean(times[order]), "ms")
-
-
-"""
-10
-	 ijk 0.0 ms
-	 ikj 1.5625 ms
-	 jik 0.0 ms
-	 jki 1.5625 ms
-	 kij 1.5625 ms
-	 kji 1.5625 ms
-100
-	 ijk 1040.625 ms
-	 ikj 1025.0 ms
-	 jik 1026.5625 ms
-	 jki 1018.75 ms
-	 kij 1025.0 ms
-	 kji 1026.5625 ms
-1000
-	 ijk 1124683.9995384216 ms
-	 ikj 1029793.6701774597 ms
-	 jik 1023840.5575752258 ms
-	 jki 1013746.8390464783 ms
-	 kij 1006403.1116962433 ms
-	 kji 1208808.735370636 ms
-"""
