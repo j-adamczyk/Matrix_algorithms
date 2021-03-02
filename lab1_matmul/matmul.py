@@ -1,4 +1,5 @@
 import numpy as np
+from statistics import mean
 from time import process_time
 
 
@@ -70,14 +71,44 @@ def matmul_3_loops(A: np.ndarray,
 
 
 if __name__ == "__main__":
-    for size in [10, 100, 1000]:
+    for size in [10, 100]:
         print(size)
+        times = {key: [] for key in ["ijk", "ikj", "jik", "jki", "kij", "kji"]}
         for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
-            A = np.random.rand(size, size)
-            B = np.random.rand(size, size)
+            for _ in range(10):
+                A = np.random.rand(size, size)
+                B = np.random.rand(size, size)
 
-            start = process_time()
-            C = matmul_3_loops(A, B, order)
-            end = process_time()
+                start = process_time()
+                C = matmul_3_loops(A, B, order)
+                end = process_time()
 
-            print("\t", order, (end - start) * 1000, "ms")
+                ms = (end - start) * 1000
+                times[order].append(ms)
+        for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
+            print("\t", order, mean(times[order]), "ms")
+
+
+"""
+10
+	 ijk 0.0 ms
+	 ikj 1.5625 ms
+	 jik 0.0 ms
+	 jki 1.5625 ms
+	 kij 1.5625 ms
+	 kji 1.5625 ms
+100
+	 ijk 1040.625 ms
+	 ikj 1025.0 ms
+	 jik 1026.5625 ms
+	 jki 1018.75 ms
+	 kij 1025.0 ms
+	 kji 1026.5625 ms
+1000
+	 ijk 1124683.9995384216 ms
+	 ikj 1029793.6701774597 ms
+	 jik 1023840.5575752258 ms
+	 jki 1013746.8390464783 ms
+	 kij 1006403.1116962433 ms
+	 kji 1208808.735370636 ms
+"""
