@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.linalg import lu_factor
 
-from lab3_4_sparse.sparse_matrices import CoordinateSparseMatrix
-from lab3_4_sparse.sparse_gauss import sparse_gauss_elimination_row
+from sparse_matrices.sparse_matrices import CoordinateSparseMatrix
+from sparse_matrices.sparse_gauss import sparse_gauss_elimination_row
 
 
 if __name__ == '__main__':
