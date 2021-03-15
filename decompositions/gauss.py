@@ -170,7 +170,7 @@ if __name__ == '__main__':
     A, b = gaussian_elimination_gen_U_1(A, b)
     print("Gaussian elimination, generating 1 on diagonal")
     print("Generated:")
-    print(A, "\n", b)
+    print(A, "\n")
     print("Answer:")
     print(np.array([[1, 2/3, 1/3],
                     [0, 1, 0.2],
@@ -187,7 +187,7 @@ if __name__ == '__main__':
     A, b = gaussian_elimination_gen_U_det(A, b)
     print("Gaussian elimination, generating determinant on diagonal")
     print("Generated:")
-    print(A, "\n", b)
+    print(A, "\n")
     print("Answer:")
     print(np.array([[2, -2, 1],
                     [0, 4, 1],
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     A, b = gaussian_elimination_with_pivoting(A, b)
     print("Gaussian elimination with pivoting")
     print("Generated:")
-    print(A, "\n", b)
+    print(A, "\n", b, "\n")
     print("Answer:")
     print(np.array([[1, 1/3, 1/3],
                     [0, 1, -4/5],
