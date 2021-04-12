@@ -5,7 +5,7 @@ from numpy.linalg import norm, eig
 
 
 def eigenvalue(A, v):
-    return np.dot(v, np.dot(A, v))
+    return np.dot(v, np.dot(A, v)) / np.dot(v, v)
 
 
 def eigendecomp(A: np.ndarray,
