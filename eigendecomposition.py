@@ -44,7 +44,7 @@ def eigendecomp(A: np.ndarray,
 
         A = A - eig_val_new * eig_vec_new * eig_vec_new[:, np.newaxis]
 
-    return eigvals, eigvecs
+    return eigvals, eigvecs.T
 
 
 if __name__ == '__main__':
