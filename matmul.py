@@ -66,20 +66,52 @@ def matmul_3_loops(A: np.ndarray,
     return C
 
 
+def matmul_block(A: np.ndarray,
+                 B: np.ndarray) \
+        -> np.ndarray:
+    """
+    Block matrix multiplication, using recursive definition.
+    :param A: matrix of shape (n, n)
+    :param B: matrix of shape (n, n)
+    :return: matrix of shape (m, n)
+    """
+    n = A.shape[0]
+
+    A = A.astype(np.float)
+    B = B.astype(np.float)
+
+    if n <= 2:
+        return A @ B
+
+    i = n // 2
+    A_block = [[A[:i, :i], A[:i, i:]],
+               [A[i:, :i], A[i:, i:]]]
+
+    B_block = [[B[:i, :i], B[:i, i:]],
+               [B[i:, :i], B[i:, i:]]]
+
+    C = np.empty((n, n))
+
+    C[:i, :i] = matmul_block(A_block[0][0], B_block[0][0]) + \
+                matmul_block(A_block[0][1], B_block[1][0])
+
+    C[:i, i:] = matmul_block(A_block[0][0], B_block[0][1]) + \
+                matmul_block(A_block[0][1], B_block[1][1])
+
+    C[i:, :i] = matmul_block(A_block[1][0], B_block[0][0]) + \
+                matmul_block(A_block[1][1], B_block[1][0])
+
+    C[i:, i:] = matmul_block(A_block[1][0], B_block[0][1]) + \
+                matmul_block(A_block[1][1], B_block[1][1])
+
+    return C
+
+
 if __name__ == "__main__":
-    for size in [10, 100]:
-        print(size)
-        times = {key: [] for key in ["ijk", "ikj", "jik", "jki", "kij", "kji"]}
-        for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
-            for _ in range(10):
-                A = np.random.rand(size, size)
-                B = np.random.rand(size, size)
+    A = np.arange(0, 9).reshape((3, 3))
+    B = np.arange(0, 9).reshape((3, 3))
 
-                start = process_time()
-                C = matmul_3_loops(A, B, order)
-                end = process_time()
-
-                ms = (end - start) * 1000
-                times[order].append(ms)
-        for order in ["ijk", "ikj", "jik", "jki", "kij", "kji"]:
-            print("\t", order, mean(times[order]), "ms")
+    C = A @ B
+    print(C)
+    print()
+    print(matmul_block(A, B))
